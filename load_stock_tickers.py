@@ -3,7 +3,7 @@
 import pandas as pd
 from load_data import DataLoader
 import yfinance as yf
-import csv
+import matplotlib.pyplot as plt
 
 import pandas_datareader as pdr
 
@@ -41,10 +41,33 @@ def get_sectors(data):
 # print(stock_data)
 
 fname = 'EUNL_holdings.csv'
-msci_world = pd.read_csv(fname, header=2)
+msci_world = pd.read_csv(fname, header=2, decimal=',')
 
 msci_world_stocks = msci_world[(msci_world['Anlageklasse'] == 'Aktien')]
 
-print(msci_world_stocks.columns)
+# print(msci_world_stocks.columns)
 
-print(msci_world_stocks[['Emittententicker', 'Name', 'Sektor', 'Marktwert', 'Gewichtung (%)', 'Nominalwert']][:20])
+msci_world_stocks['Gewichtung (%) kummuliert'] = msci_world_stocks['Gewichtung (%)'].cumsum()
+
+clean_df = msci_world_stocks[['Emittententicker', 'Name', 'Sektor', 'Marktwert', 'Gewichtung (%)', 'Gewichtung (%) kummuliert', 'Nominalwert']]
+
+# print(clean_df['Sektor'].unique())
+
+# it_stocks = clean_df[(clean_df['Sektor'] == 'IT')]
+# print(it_stocks['Gewichtung (%)'].sum())
+
+sector_weights = {}
+
+for sector in clean_df['Sektor'].unique():
+    sector_stocks = clean_df[(clean_df['Sektor'] == sector)]
+    sector_weight = sector_stocks['Gewichtung (%)'].sum()
+
+    sector_weights[sector] = sector_weight
+
+print(sector_weights)
+
+# plt.plot(clean_df.index, clean_df['Gewichtung (%) kummuliert'])
+
+# plt.show()
+
+# print(clean_df[(clean_df['Gewichtung (%) kummuliert'] <= 50.0)])
