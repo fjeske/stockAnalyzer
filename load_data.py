@@ -3,6 +3,7 @@ import yfinance as yf
 from datetime import datetime
 
 class DataLoader:
+
     def __init__(self):
         self.today = datetime.today().strftime('%Y-%m-%d')
 
@@ -14,3 +15,9 @@ class DataLoader:
         elif end is not None:
             self.end = end
         self.period = period
+
+    def get_data(self):
+        self.stock = yf.Ticker(self.ticker)
+
+    def print_stock_info(self):
+        print(self.stock.info)
