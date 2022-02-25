@@ -4,6 +4,7 @@ import pandas as pd
 from load_data import DataLoader
 import yfinance as yf
 import matplotlib.pyplot as plt
+import numpy as np
 
 import pandas_datareader as pdr
 
@@ -53,18 +54,38 @@ clean_df = msci_world_stocks[['Emittententicker', 'Name', 'Sektor', 'Marktwert',
 
 # print(clean_df['Sektor'].unique())
 
-# it_stocks = clean_df[(clean_df['Sektor'] == 'IT')]
-# print(it_stocks['Gewichtung (%)'].sum())
+it_stocks = clean_df[(clean_df['Sektor'] == 'Immobilien')][:7]
+print(it_stocks)
 
 sector_weights = {}
+sector_allocation = {}
+
+top_n = 10
+
+n_stocks = clean_df.shape[0]
+
+# print(n_stocks)
 
 for sector in clean_df['Sektor'].unique():
     sector_stocks = clean_df[(clean_df['Sektor'] == sector)]
     sector_weight = sector_stocks['Gewichtung (%)'].sum()
 
+    # calculates the weight of the stocks from the sector in the index
+    n_of_stocks_in_sector = clean_df[(clean_df['Sektor'] == sector)].shape[0]
+    sector_prct = n_of_stocks_in_sector / n_stocks
+    sector_allocation[sector] = sector_prct
+
     sector_weights[sector] = sector_weight
 
-print(sector_weights)
+# print(sector_allocation)
+
+# calculates number of stocks to buy from a certain sector
+n_stocks_to_buy = 100
+sector_list = list(sector_allocation.keys())
+np_sector_allocation = np.fromiter(sector_allocation.values(), dtype=float)
+
+print(sector_list)
+print(np.ceil(np_sector_allocation * 100))
 
 # plt.plot(clean_df.index, clean_df['Gewichtung (%) kummuliert'])
 
