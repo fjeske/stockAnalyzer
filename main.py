@@ -6,7 +6,7 @@ import numpy as np
 
 def main():
     print("Hello fellow stock enthusiast!")
-    stock_data = StockData(src_filename='EXSA_holdings.csv')
+    stock_data = StockData(src_filename='EUNL_holdings.csv')
 
     print(f"Anzahl der Sektoren: {len(stock_data.sectors)}")
 
