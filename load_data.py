@@ -11,13 +11,9 @@ class StockData:
     """
     def __init__(self, src_filename):
         self.src_filename = src_filename
-        self.portfolio = []
-
-    def load_data(self):
+        self.portfolio = dict()
         self.stock_data = pd.read_csv(self.src_filename, header=2, decimal=',')
         self.stock_data = self.stock_data[(self.stock_data['Anlageklasse'] == 'Aktien')]
-
-    def load_sectors(self):
         self.sectors = self.stock_data['Sektor'].unique()
 
     def pick_rand_stock_for_sector(self):
@@ -40,4 +36,5 @@ class StockData:
             # print(stocks[['Name', 'Marktwert']])
             
             # add the stocks from the sector to the portfolio
-            self.portfolio.append(stocks['Name'].values)
+            self.portfolio[sector] = list(stocks['Name'].values)
+            # self.portfolio.append(list(stocks['Name'].values))
